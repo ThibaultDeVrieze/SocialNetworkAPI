@@ -27,23 +27,29 @@ namespace SocialNetwork.Data.Repositories
         {
             _users.Remove(user);
         }
+        public void Update(User user)
+        {
+            _users.Update(user);
+        }
 
         public IEnumerable<User> GetAll()
         {
-            return _users.Include(u=>u.Messages)
-                .Include(u=>u.Events)
+            return _users
                 .Include(u=>u.Location)
-                .Include(u=>u.Images)
                 .ToList();
         }
 
         public User GetBy(int userID)
         {
-            return _users.Include(u => u.Messages)
-                .Include(u => u.Events)
+            return _users
                 .Include(u => u.Location)
-                .Include(u => u.Images)
                 .SingleOrDefault(u => u.UserID == userID);
+        }
+        public User GetByEmail(string email)
+        {
+            return _users
+                .Include(u => u.Location)
+                .SingleOrDefault(u => u.Email == email);
         }
 
         public void SaveChanges()
