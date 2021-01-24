@@ -16,9 +16,6 @@ namespace SocialNetwork.Models
         public string LinkedInURL { get; set; }
         public Location Location { get; set; }
         public string Description { get; set; }
-        public ICollection<Image> Images { get; set; }
-        public ICollection<Message> Messages { get; set; }
-        public ICollection<UserEvent> Events { get; set; }
         #endregion
 
         #region Constructors
@@ -34,20 +31,10 @@ namespace SocialNetwork.Models
             Location = location;
             LinkedInURL = linkedin;
             Description = description;
-            Images = new List<Image>();
-            Messages = new List<Message>();
         }
         #endregion
 
         #region Methods
-        public void DeleteImage(int imgID)
-        {
-            Images.Remove(Images.FirstOrDefault(i => i.ImageID == imgID));
-        }
-        public void DeleteMessage(int messageID)
-        {
-            Messages.Remove(Messages.FirstOrDefault(i => i.MessageID == messageID));
-        }
         #endregion
     }
 }

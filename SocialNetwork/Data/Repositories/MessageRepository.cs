@@ -30,12 +30,17 @@ namespace SocialNetwork.Data.Repositories
 
         public IEnumerable<Message> GetAll()
         {
-            return _messages.ToList();
+            return _messages.OrderBy(m=>m.DateTime).Reverse().ToList();
         }
 
         public Message GetBy(int messageID)
         {
             return _messages.SingleOrDefault(m => m.MessageID == messageID);
+        }
+
+        public void Update(Message mess)
+        {
+            _messages.Update(mess);
         }
 
         public void SaveChanges()

@@ -11,6 +11,7 @@ namespace SocialNetwork.Models.IRepositories
         IEnumerable<Message> GetAll();
         void Add(Message message);
         void Delete(Message message);
+        void Update(Message message);
         void SaveChanges();
     }
 }
