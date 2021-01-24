@@ -44,9 +44,9 @@ namespace SocialNetwork.Models
             Editted = true;
             DateTime = DateTime.Now;
         }
-        public bool CanEditMessage(User user)
+        public bool CanEditMessage(int user)
         {
-            return User == user;
+            return User.UserID == user;
         }
         #endregion
     }

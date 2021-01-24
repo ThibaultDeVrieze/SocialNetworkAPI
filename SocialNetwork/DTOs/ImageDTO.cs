@@ -8,6 +8,6 @@ namespace SocialNetwork.DTOs
     public class ImageDTO
     {
         public string ImagePath { get; set; }
-        public UserDTO User { get; set; }
+        public int UserID { get; set; }
     }
 }

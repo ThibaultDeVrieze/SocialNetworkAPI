@@ -12,6 +12,6 @@ namespace SocialNetwork.DTOs
         public DateTime Date { get; set; }
         public LocationDTO Location { get; set; }
         public ImageDTO Image { get; set; }
-        public UserDTO Founder { get; set; }
+        public int FounderID { get; set; }
     }
 }

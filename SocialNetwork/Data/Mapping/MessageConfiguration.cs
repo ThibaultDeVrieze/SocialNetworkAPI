@@ -13,7 +13,7 @@ namespace SocialNetwork.Data.Mapping
         public void Configure(EntityTypeBuilder<Message> builder)
         {
             builder.HasKey(m => m.MessageID);
-            builder.HasOne(m => m.User).WithMany(u => u.Messages).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.User);
         }
     }
 }

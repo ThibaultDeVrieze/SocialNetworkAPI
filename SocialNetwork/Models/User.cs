@@ -16,6 +16,7 @@ namespace SocialNetwork.Models
         public string LinkedInURL { get; set; }
         public Location Location { get; set; }
         public string Description { get; set; }
+        public ICollection<UserEvent> Events { get; set; }
         #endregion
 
         #region Constructors
@@ -31,6 +32,7 @@ namespace SocialNetwork.Models
             Location = location;
             LinkedInURL = linkedin;
             Description = description;
+            Events = new List<UserEvent>();
         }
         #endregion
 

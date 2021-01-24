@@ -30,12 +30,18 @@ namespace SocialNetwork.Data.Repositories
 
         public IEnumerable<Event> GetAll()
         {
-            return _events.Include(e => e.UsersGoing).ToList();
+            return _events.Include(e => e.Location)
+                .Include(e => e.UsersGoing)
+                .Include(e=>e.Messages)
+                .Include(e => e.Founder).ToList();
         }
 
         public Event GetBy(int eventID)
         {
-            return _events.SingleOrDefault(e => e.EventID == eventID);
+            return _events.Include(e => e.Location)
+                .Include(e => e.UsersGoing)
+                .Include(e => e.Messages)
+                .Include(e => e.Founder).SingleOrDefault(e => e.EventID == eventID);
         }
 
         public void SaveChanges()

@@ -41,7 +41,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<Image> PostImage(ImageDTO dto)
         {
-            User user = _userRepository.GetByEmail(dto.User.Email);
+            User user = _userRepository.GetBy(dto.UserID);
             Image img = new Image(dto.ImagePath, user);
             _imageRepository.Add(img);
             _imageRepository.SaveChanges();

@@ -13,7 +13,7 @@ namespace SocialNetwork.Data.Mapping
         public void Configure(EntityTypeBuilder<Image> builder)
         {
             builder.HasKey(img => img.ImageID);
-            builder.HasOne(img => img.User).WithMany(u => u.Images).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(img => img.User);
         }
     }
 }

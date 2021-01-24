@@ -41,7 +41,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<Message> PostMessage(MessageDTO dto)
         {
-            User user = _userRepository.GetByEmail(dto.User.Email);
+            User user = _userRepository.GetBy(dto.UserID);
             Image img = new Image(dto.Image.ImagePath, user);
             Message mess = new Message(dto.MessageText, user, img);
             _messageRepository.Add(mess);
@@ -61,11 +61,11 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateMessage(int id, MessageDTO dto)
+        public IActionResult UpdateMessage(int id, string text)
         {
             Message mess = _messageRepository.GetBy(id);
             if (mess == null) return NotFound();
-            mess.MessageText = dto.MessageText;
+            mess.EditMessage(text);
             _messageRepository.Update(mess);
             _messageRepository.SaveChanges();
             return NoContent();

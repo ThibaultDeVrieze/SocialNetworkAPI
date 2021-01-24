@@ -18,10 +18,12 @@ namespace SocialNetwork.Controllers
     {
         private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
-        public EventController(IEventRepository repo, IUserRepository uRepo)
+        private readonly IMessageRepository _messageRepository;
+        public EventController(IEventRepository repo, IUserRepository uRepo, IMessageRepository mRepo)
         {
             _eventRepository = repo;
             _userRepository = uRepo;
+            _messageRepository = mRepo;
         }
 
         [HttpGet]
@@ -41,10 +43,42 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public ActionResult<Event> PostEvent(EventDTO dto)
         {
-            User user = _userRepository.GetByEmail(dto.Founder.Email);
-            Location loc = new Location(dto.Location.Street, dto.Location.HouseNr, dto.Location.Postalcode, dto.Location.City, dto.Location.Country);
-            Event ev = new Event(dto.EventName, dto.Date, user, loc, new Image(dto.Image.ImagePath, user), dto.Description);
+            User user = _userRepository.GetBy(dto.FounderID);
+            Location loc = new Location(dto.Location.Street="", dto.Location.HouseNr=0, dto.Location.Postalcode=0, dto.Location.City="", dto.Location.Country="Belgium");
+            Event ev;
+            if (dto.Image == null)
+            {
+                ev = new Event(dto.EventName, dto.Date, user, loc, null, dto.Description="");
+            }
+            else
+            {
+                ev = new Event(dto.EventName, dto.Date, user, loc, new Image(dto.Image.ImagePath, user), dto.Description="");
+            }
             _eventRepository.Add(ev);
+            _eventRepository.SaveChanges();
+            return CreatedAtAction(nameof(GetEvent),
+                new { id = ev.EventID }, ev);
+        }
+
+        [HttpPost("message")]
+        public ActionResult<Event> PostMessageToEvent(int id, MessageDTO dto)
+        {
+            Event ev = _eventRepository.GetBy(id);
+            if (ev == null) return NotFound();
+            User user = _userRepository.GetBy(dto.UserID);
+            Message mess;
+            if(dto.Image == null)
+            {
+                mess = new Message(dto.MessageText, user);
+            }
+            else
+            {
+                Image img = new Image(dto.Image.ImagePath, user);
+                mess = new Message(dto.MessageText, user, img);
+            }
+            _messageRepository.Add(mess);
+            ev.PostMessage(mess);
+            _messageRepository.SaveChanges();
             _eventRepository.SaveChanges();
             return CreatedAtAction(nameof(GetEvent),
                 new { id = ev.EventID }, ev);
