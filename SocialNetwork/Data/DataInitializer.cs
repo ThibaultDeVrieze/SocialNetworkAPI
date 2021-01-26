@@ -1,7 +1,9 @@
-﻿using SocialNetwork.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using SocialNetwork.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SocialNetwork.Data
@@ -9,17 +11,23 @@ namespace SocialNetwork.Data
     public class DataInitializer
     {
         private readonly ApplicationDbContext _context;
-
-        public DataInitializer(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public DataInitializer(ApplicationDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public void InitializeData()
+        public async Task InitializeData()
         {
             _context.Database.EnsureDeleted();
             if (_context.Database.EnsureCreated())
             {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+
                 Location loc1 = new Location("Karmstraat", 32, 9790, "Ooike");
                 Location loc2 = new Location("Lentestraat", 64);
                 Location loc3 = new Location();
@@ -42,6 +50,15 @@ namespace SocialNetwork.Data
                     "jonas.vandeputte@gmail.com",
                     loc2, "",
                     "Ik ben een 20-jarige student Industrieel Ingenieur");
+
+                var iThibault = new IdentityUser { UserName = thibault.Email, Email = thibault.Email };
+                await _userManager.CreateAsync(iThibault, "password");
+                await _userManager.AddToRoleAsync(iThibault, "User");
+                await _userManager.AddToRoleAsync(iThibault, "Admin");
+
+                var iJonas = new IdentityUser { UserName = jonas.Email, Email = jonas.Email };
+                await _userManager.CreateAsync(iJonas, "password");
+                await _userManager.AddToRoleAsync(iJonas, "User");
 
                 _context.Users.Add(thibault);
                 _context.Users.Add(jonas);

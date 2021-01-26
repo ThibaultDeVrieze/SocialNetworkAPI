@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,8 @@ namespace SocialNetwork.Models
         public string LinkedInURL { get; set; }
         public Location Location { get; set; }
         public string Description { get; set; }
+        public bool Approved { get; set; }
+        public bool DarkMode { get; set; }
         public ICollection<UserEvent> Events { get; set; }
         #endregion
 
@@ -32,6 +35,8 @@ namespace SocialNetwork.Models
             Location = location;
             LinkedInURL = linkedin;
             Description = description;
+            Approved = false;
+            DarkMode = false;
             Events = new List<UserEvent>();
         }
         #endregion

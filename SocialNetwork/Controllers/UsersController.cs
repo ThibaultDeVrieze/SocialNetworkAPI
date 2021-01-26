@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.DTOs;
 using SocialNetwork.Models;
@@ -14,6 +16,7 @@ namespace SocialNetwork.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -92,6 +95,28 @@ namespace SocialNetwork.Controllers
             user.LinkedInURL = dto.LinkedInURL;
             Location loc = new Location(dto.Location.Street, dto.Location.HouseNr, dto.Location.Postalcode, dto.Location.City, dto.Location.Country);
             user.Location = loc;
+            _userRepository.Update(user);
+            _userRepository.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}/ChangeApproved")]
+        public IActionResult ApproveUser(int id, bool approve)
+        {
+            User user = _userRepository.GetBy(id);
+            if (user == null) return NotFound();
+            user.Approved = approve;
+            _userRepository.Update(user);
+            _userRepository.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}/ChangeDarkMode")]
+        public IActionResult ChangeDarkMode(int id, bool mode)
+        {
+            User user = _userRepository.GetBy(id);
+            if (user == null) return NotFound();
+            user.DarkMode = mode;
             _userRepository.Update(user);
             _userRepository.SaveChanges();
             return NoContent();
